@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Услуга')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <a th:href="@{/catalog}" class="text-muted">← Назад в каталог</a>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h1 th:text="${service.name}"></h1>
+            <p class="text-muted mb-3">
+                Категория: <b th:text="${service.category}"></b>
+            </p>
+            <p class="fs-3">
+                <b th:text="${service.price} + ' ₽'"></b>
+            </p>
+
+            <hr>
+            <p class="mb-0">
+                Чтобы заказать эту услугу, войдите в личный кабинет и создайте заявку.
+            </p>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

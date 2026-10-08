@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Контакты')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <h1 class="mb-4">📞 Контакты</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <p><b>Адрес:</b> г. Москва, ул. Пушкина, д. 10</p>
+            <p><b>Телефон:</b> <a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+            <p><b>Email:</b> <a href="mailto:info@pvz.ru">info@pvz.ru</a></p>
+            <p><b>Часы работы:</b> Пн–Сб, 09:00–21:00; Вс, 10:00–18:00</p>
+            <p class="text-muted mb-0">Приём и выдача посылок — ежедневно, без перерывов.</p>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Каталог услуг')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+  <h1 class="mb-4">📋 Каталог услуг</h1>
+
+  <div th:if="${services.isEmpty()}" class="alert alert-info">
+    Пока нет доступных услуг.
+  </div>
+
+  <div class="card" th:unless="${services.isEmpty()}">
+    <table class="table mb-0">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Название</th>
+        <th>Категория</th>
+        <th>Цена</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="s : ${services}">
+        <td th:text="${s.id}"></td>
+        <td th:text="${s.name}"></td>
+        <td th:text="${s.category}"></td>
+        <td th:text="${s.price} + ' ₽'"></td>
+        <td>
+          <a th:href="@{'/catalog/' + ${s.id}}" class="btn btn-primary btn-sm">Подробнее</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

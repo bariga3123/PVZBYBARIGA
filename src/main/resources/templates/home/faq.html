@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('FAQ')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <h1 class="mb-4">❓ Часто задаваемые вопросы</h1>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Как получить посылку?</h5>
+            <p class="mb-0">Назовите трек-номер и предъявите паспорт. Если получатель другой — потребуется доверенность.</p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Сколько хранится посылка?</h5>
+            <p class="mb-0">Бесплатно — 3 дня с момента поступления. Далее — платное хранение (30 ₽/день).</p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Можно ли получить за другого человека?</h5>
+            <p class="mb-0">Да, по нотариальной доверенности или по письменному заявлению отправителя.</p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Что делать, если посылка повреждена?</h5>
+            <p class="mb-0">Не покидая пункт выдачи, оформите акт повреждения вместе с оператором и оставьте заявку через личный кабинет.</p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Как отследить посылку?</h5>
+            <p class="mb-0">Войдите в личный кабинет — все ваши посылки и их статусы отображаются в разделе «Мои заявки».</p>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,13 +1,14 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:pvzdb
+    url: jdbc:h2:file:./pvzdb        # ← file вместо mem
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update               # ← update вместо create-drop
     show-sql: true
+    defer-datasource-initialization: true
     properties:
       hibernate:
         format_sql: true
@@ -17,11 +18,6 @@ spring:
       path: /h2-console
   sql:
     init:
-      mode: always
-      data-locations: classpath:data.sql
+      mode: never                    # ← data.sql выполнится только один раз
   thymeleaf:
     cache: false
-
-logging:
-  level:
-    org.springframework.security: DEBUG

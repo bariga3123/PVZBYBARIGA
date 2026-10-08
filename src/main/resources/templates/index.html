@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: head('Главная')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <div class="hero">
+        <h1>📦 ПВЗ-Система</h1>
+        <p>Информационно-справочная система пункта выдачи заказов. Хранение, выдача и отслеживание посылок.</p>
+
+        <div sec:authorize="isAnonymous()">
+            <a th:href="@{/login}" class="btn btn-primary">Войти</a>
+            <a th:href="@{/register}" class="btn btn-outline">Регистрация</a>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <p style="color:#fef3c7;font-weight:600;">
+                Вы вошли как <span sec:authentication="name"></span>
+                (<span sec:authentication="principal.authorities"></span>)
+            </p>
+        </div>
+    </div>
+
+    <p class="text-muted">
+        Остальные страницы (каталог, заявки, админка) появятся на следующих шагах.
+    </p>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

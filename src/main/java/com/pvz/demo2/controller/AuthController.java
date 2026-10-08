@@ -16,7 +16,6 @@ public class AuthController {
 
     private final UserService userService;
 
-    /** GET /login — показать форму входа. */
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
                             @RequestParam(value = "logout", required = false) String logout,
@@ -30,7 +29,6 @@ public class AuthController {
         return "auth/login";
     }
 
-    /** GET /register — показать форму регистрации. */
     @GetMapping("/register")
     public String registerPage(Model model) {
         if (!model.containsAttribute("dto")) {
@@ -39,30 +37,32 @@ public class AuthController {
         return "auth/register";
     }
 
-    /** POST /register — обработать регистрацию. */
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("dto") UserRegistrationDto dto,
                            BindingResult result,
-                           RedirectAttributes ra) {
+                           RedirectAttributes ra,
+                           Model model) {
 
-        // 1. Проверка совпадения паролей
-        if (dto.getPassword() != null && !dto.getPassword().equals(dto.getConfirmPassword())) {
+        // 1. Пароли должны совпадать
+        if (dto.getPassword() == null || dto.getPassword().isBlank()) {
+            result.rejectValue("password", "error.dto", "Пароль обязателен");
+        } else if (!dto.getPassword().equals(dto.getConfirmPassword())) {
             result.rejectValue("confirmPassword", "error.dto", "Пароли не совпадают");
         }
 
-        // 2. Валидация не прошла — возвращаем форму
+        // 2. Валидация не прошла — вернуть форму
         if (result.hasErrors()) {
             return "auth/register";
         }
 
-        // 3. Пытаемся зарегистрировать
+        // 3. Попытка регистрации
         try {
             userService.register(dto);
             ra.addFlashAttribute("success", "Регистрация успешна! Войдите в систему.");
             return "redirect:/login";
-        } catch (IllegalArgumentException e) {
-            // например, "Логин уже занят" или "Email уже используется"
-            result.reject("error.dto", e.getMessage());
+        } catch (Exception e) {
+            // ЛЮБАЯ ошибка — показать её в форме сверху
+            result.reject("error.dto", "Ошибка: " + e.getMessage());
             return "auth/register";
         }
     }

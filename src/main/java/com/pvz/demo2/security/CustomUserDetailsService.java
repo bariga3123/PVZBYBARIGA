@@ -1,4 +1,4 @@
-package com.pvz.demo.security;
+package com.pvz.demo2.security;
 
 import com.pvz.demo2.model.User;
 import com.pvz.demo2.repository.UserRepository;
