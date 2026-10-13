@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Все заявки')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <a th:href="@{/admin/dashboard}" class="text-muted">← В админку</a>
+    <h1 class="mb-4 mt-3">📋 Все заявки</h1>
+
+    <!-- Фильтр по статусу -->
+    <div class="mb-3">
+        <a th:href="@{/admin/requests}"
+           class="btn btn-sm"
+           th:classappend="${selectedStatus == null} ? 'btn-primary' : 'btn-secondary'">Все</a>
+        <a th:each="s : ${statuses}"
+           th:href="@{/admin/requests(status=${s})}"
+           class="btn btn-sm"
+           th:classappend="${selectedStatus == s} ? 'btn-primary' : 'btn-secondary'"
+           th:text="${s}"></a>
+    </div>
+
+    <div th:if="${orders.isEmpty()}" class="alert alert-info">Заявок нет.</div>
+
+    <div class="card" th:unless="${orders.isEmpty()}">
+        <table class="table mb-0">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Пользователь</th>
+                <th>Трек-номер</th>
+                <th>Ячейка</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Действие</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="o : ${orders}">
+                <td th:text="${o.id}"></td>
+                <td th:text="${o.parcel.customer.user.username}"></td>
+                <td th:text="${o.parcel.trackingNumber}"></td>
+                <td th:text="${o.cell != null ? o.cell.cellNumber : '—'}"></td>
+                <td th:text="${o.issueDate != null ? o.issueDate : '—'}"></td>
+                <td>
+                    <span class="badge"
+                          th:classappend="'badge-' + ${#strings.toLowerCase(o.status)}"
+                          th:text="${o.status}"></span>
+                </td>
+                <td>
+                    <form th:action="@{'/admin/requests/' + ${o.id} + '/status'}"
+                          method="post" style="display:flex;gap:4px;">
+                        <select name="status" class="form-control" style="padding:4px 8px;font-size:13px;">
+                            <option th:each="s : ${statuses}"
+                                    th:value="${s}"
+                                    th:text="${s}"
+                                    th:selected="${s == o.status}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm">OK</button>
+                    </form>
+                    <form th:action="@{'/admin/requests/' + ${o.id} + '/delete'}"
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Удалить заявку #'+[[${o.id}]]+'?');">✕</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

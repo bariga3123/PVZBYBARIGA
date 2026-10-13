@@ -111,4 +111,36 @@ public class OrderService {
         }
         return orderRepository.save(order);
     }
+
+    /** Удаление заявки админом. Освобождает ячейку, если была занята. */
+    @Transactional
+    public void delete(Long id) {
+        Order order = findById(id);
+
+        if (order.getCell() != null) {
+            Cell cell = order.getCell();
+            cell.setIsOccupied(false);
+            cellRepository.save(cell);
+        }
+
+        orderRepository.delete(order);
+    }
+    @Transactional
+    public Order changeStatus(Long orderId, ParcelStatus newStatus, String comment) {
+        Order order = findById(orderId);
+        order.setStatus(newStatus);
+
+        if (comment != null && !comment.isBlank()) {
+            order.setComment(comment);
+        }
+
+        if (newStatus == ParcelStatus.COMPLETED) {
+            order.setIssueDate(LocalDate.now());
+            if (order.getCell() != null) {
+                order.getCell().setIsOccupied(false);
+                cellRepository.save(order.getCell());
+            }
+        }
+        return orderRepository.save(order);
+    }
 }

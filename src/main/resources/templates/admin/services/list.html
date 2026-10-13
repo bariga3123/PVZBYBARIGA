@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Услуги')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <a th:href="@{/admin/dashboard}" class="text-muted">← В админку</a>
+    <div class="d-flex justify-between align-center mt-3 mb-4">
+        <h1>💼 Услуги</h1>
+        <a th:href="@{/admin/services/new}" class="btn btn-primary">+ Добавить</a>
+    </div>
+
+    <div th:if="${items.isEmpty()}" class="alert alert-info">Услуг нет.</div>
+
+    <div class="card" th:unless="${items.isEmpty()}">
+        <table class="table mb-0">
+            <thead>
+            <tr><th>#</th><th>Название</th><th>Категория</th><th>Цена</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="s : ${items}">
+                <td th:text="${s.id}"></td>
+                <td th:text="${s.name}"></td>
+                <td th:text="${s.category}"></td>
+                <td th:text="${s.price} + ' ₽'"></td>
+                <td>
+                    <a th:href="@{'/admin/services/' + ${s.id} + '/edit'}"
+                       class="btn btn-primary btn-sm">✏️</a>
+                    <form th:action="@{'/admin/services/' + ${s.id} + '/delete'}"
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Удалить услугу?');">🗑</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

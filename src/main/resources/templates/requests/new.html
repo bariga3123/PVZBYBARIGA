@@ -1,0 +1,67 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Новая заявка')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <a th:href="@{/requests}" class="text-muted">← Назад к заявкам</a>
+
+    <div class="card mt-3" style="max-width:640px;margin:16px auto 0;">
+        <div class="card-body">
+            <h3 class="card-title">📝 Новая заявка</h3>
+
+            <form th:action="@{/requests/new}" th:object="${dto}" method="post">
+
+                <!-- Глобальные ошибки — ВНУТРИ формы, после th:object -->
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                    <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="parcelId" class="form-label">Посылка *</label>
+                    <select th:field="*{parcelId}" id="parcelId" class="form-control"
+                            th:classappend="${#fields.hasErrors('parcelId')} ? 'is-invalid'">
+                        <option value="">— выберите посылку —</option>
+                        <option th:each="p : ${parcels}"
+                                th:value="${p.id}"
+                                th:text="${p.trackingNumber + ' — ' + (p.description != null ? p.description : 'без описания')}">
+                        </option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('parcelId')}"
+                         th:errors="*{parcelId}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cellId" class="form-label">Ячейка (необязательно)</label>
+                    <select th:field="*{cellId}" id="cellId" class="form-control">
+                        <option value="">— назначит администратор —</option>
+                        <option th:each="c : ${cells}"
+                                th:value="${c.id}"
+                                th:text="${c.cellNumber + ' / ' + c.size}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment" class="form-label">Комментарий</label>
+                    <textarea th:field="*{comment}" id="comment" rows="3"
+                              class="form-control"
+                              th:classappend="${#fields.hasErrors('comment')} ? 'is-invalid'"></textarea>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('comment')}"
+                         th:errors="*{comment}"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Создать заявку</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

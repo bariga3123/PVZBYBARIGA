@@ -1,12 +1,195 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/header :: head('Главная')}"></head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Главная — ПВЗ-Система</title>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f4f6f9;
+            color: #212529;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a { color: #0d6efd; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ===== Шапка ===== */
+        .navbar {
+            background: #1f2937;
+            color: #fff;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .navbar-brand:hover { text-decoration: none; }
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            list-style: none;
+        }
+        .nav-menu a {
+            color: #d1d5db;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: background 0.15s, color 0.15s;
+            text-decoration: none;
+        }
+        .nav-menu a:hover {
+            background: #374151;
+            color: #fff;
+            text-decoration: none;
+        }
+        .nav-user {
+            color: #fbbf24;
+            font-weight: 600;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        /* ===== Контейнер ===== */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* ===== Кнопки ===== */
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.15s, opacity 0.15s;
+        }
+        .btn:hover { opacity: 0.9; text-decoration: none; }
+        .btn-primary   { background: #0d6efd; color: #fff; }
+        .btn-success   { background: #198754; color: #fff; }
+        .btn-outline   { background: transparent; color: #fff; border: 1px solid #6b7280; }
+        .btn-outline:hover { background: #374151; }
+        .btn-sm        { padding: 6px 12px; font-size: 13px; }
+
+        /* ===== Hero-блок ===== */
+        .hero {
+            background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+            color: #fff;
+            padding: 60px 40px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(13,110,253,0.25);
+        }
+        .hero h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+        .hero p {
+            font-size: 17px;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        /* ===== Карточки-ссылки ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            text-decoration: none;
+        }
+        .card-body { padding: 24px; }
+        .card-body h4 {
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+
+        /* ===== Футер ===== */
+        .footer {
+            background: #1f2937;
+            color: #9ca3af;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            margin-top: auto;
+        }
+        .footer small { color: #6b7280; }
+
+        .text-muted { color: #6b7280; font-size: 14px; }
+        .mb-0 { margin-bottom: 0; }
+        .mb-4 { margin-bottom: 24px; }
+        .mt-3 { margin-top: 16px; }
+    </style>
+</head>
 <body>
 
-<nav th:replace="~{fragments/header :: navbar}"></nav>
-<div th:replace="~{fragments/alerts :: alerts}"></div>
+<!-- Шапка -->
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/}">📦 ПВЗ-Система</a>
+    <ul class="nav-menu">
+        <li><a th:href="@{/}">Главная</a></li>
+        <li><a th:href="@{/catalog}">Каталог</a></li>
+        <li><a th:href="@{/contacts}">Контакты</a></li>
+        <li><a th:href="@{/faq}">FAQ</a></li>
+        <li sec:authorize="hasAnyRole('USER','ADMIN')">
+            <a th:href="@{/requests}">Мои заявки</a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/dashboard}">Админка</a>
+        </li>
+    </ul>
 
+    <div style="display:flex;align-items:center;gap:8px;">
+        <span sec:authorize="isAnonymous()">
+            <a class="btn btn-outline btn-sm" th:href="@{/login}">Войти</a>
+            <a class="btn btn-primary btn-sm" th:href="@{/register}">Регистрация</a>
+        </span>
+        <span sec:authorize="isAuthenticated()" style="display:flex;align-items:center;gap:8px;">
+            <a class="nav-user" th:href="@{/profile}">
+                👤 <span sec:authentication="name"></span>
+            </a>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-outline btn-sm">Выйти</button>
+            </form>
+        </span>
+    </div>
+</nav>
+
+<!-- Контент -->
 <div class="container">
     <div class="hero">
         <h1>📦 ПВЗ-Система</h1>
@@ -25,11 +208,48 @@
         </div>
     </div>
 
-    <p class="text-muted">
-        Остальные страницы (каталог, заявки, админка) появятся на следующих шагах.
-    </p>
+    <!-- Карточки-ссылки -->
+    <div class="cards-grid">
+        <a th:href="@{/catalog}" class="card">
+            <div class="card-body">
+                <h4>📋 Каталог услуг</h4>
+                <p class="text-muted mb-0">Список доступных услуг и их стоимость.</p>
+            </div>
+        </a>
+        <a th:href="@{/faq}" class="card">
+            <div class="card-body">
+                <h4>❓ FAQ</h4>
+                <p class="text-muted mb-0">Часто задаваемые вопросы по работе ПВЗ.</p>
+            </div>
+        </a>
+        <a th:href="@{/contacts}" class="card">
+            <div class="card-body">
+                <h4>📞 Контакты</h4>
+                <p class="text-muted mb-0">Адрес, телефон, часы работы.</p>
+            </div>
+        </a>
+        <a sec:authorize="hasAnyRole('USER','ADMIN')"
+           th:href="@{/requests}" class="card">
+            <div class="card-body">
+                <h4>📦 Мои заявки</h4>
+                <p class="text-muted mb-0">Ваши заявки и их статусы.</p>
+            </div>
+        </a>
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/admin/dashboard}" class="card">
+            <div class="card-body">
+                <h4>🛠️ Админка</h4>
+                <p class="text-muted mb-0">Управление заявками, посылками, услугами.</p>
+            </div>
+        </a>
+    </div>
 </div>
 
-<footer th:replace="~{fragments/footer :: footer}"></footer>
+<!-- Футер -->
+<footer class="footer">
+    <p>© 2026 ПВЗ-Система. Информационно-справочная система пункта выдачи заказов.</p>
+    <small>Учебный проект. Spring Boot + Thymeleaf + H2</small>
+</footer>
+
 </body>
 </html>

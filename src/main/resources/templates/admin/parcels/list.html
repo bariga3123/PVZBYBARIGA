@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Посылки')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <a th:href="@{/admin/dashboard}" class="text-muted">← В админку</a>
+
+    <div class="d-flex justify-between align-center mt-3 mb-4">
+        <h1>📦 Посылки</h1>
+        <a th:href="@{/admin/parcels/new}" class="btn btn-primary">+ Добавить</a>
+    </div>
+
+    <!-- Поиск по трек-номеру -->
+    <form th:action="@{/admin/parcels}" method="get" class="mb-3"
+          style="display:flex;gap:8px;max-width:420px;">
+        <input type="text" name="q" th:value="${q}" class="form-control"
+               placeholder="Поиск по трек-номеру...">
+        <button type="submit" class="btn btn-primary">Найти</button>
+        <a th:href="@{/admin/parcels}" class="btn btn-secondary">Сброс</a>
+    </form>
+
+    <div th:if="${items.isEmpty()}" class="alert alert-info">Посылок нет.</div>
+
+    <div class="card" th:unless="${items.isEmpty()}">
+        <table class="table mb-0">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Трек-номер</th>
+                <th>Получатель</th>
+                <th>Вес</th>
+                <th>Поступила</th>
+                <th>Хранить до</th>
+                <th>Статус</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${items}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.trackingNumber}"></td>
+                <td th:text="${p.customer != null ? p.customer.fullName : '—'}"></td>
+                <td th:text="${p.weight != null ? p.weight + ' кг' : '—'}"></td>
+                <td th:text="${p.arrivalDate != null ? p.arrivalDate : '—'}"></td>
+                <td th:text="${p.storageUntil != null ? p.storageUntil : '—'}"></td>
+                <td>
+                    <span class="badge"
+                          th:classappend="'badge-' + ${#strings.toLowerCase(p.status)}"
+                          th:text="${p.status}"></span>
+                </td>
+                <td>
+                    <a th:href="@{'/admin/parcels/' + ${p.id} + '/edit'}"
+                       class="btn btn-primary btn-sm">✏️</a>
+                    <form th:action="@{'/admin/parcels/' + ${p.id} + '/delete'}"
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Удалить посылку?');">🗑</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

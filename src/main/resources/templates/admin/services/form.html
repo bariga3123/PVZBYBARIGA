@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Услуга')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <a th:href="@{/admin/services}" class="text-muted">← К списку</a>
+
+    <div class="card mt-3" style="max-width:520px;margin:16px auto 0;">
+        <div class="card-body">
+            <h3 class="card-title"
+                th:text="${id == null ? 'Новая услуга' : 'Редактирование услуги'}"></h3>
+
+            <form th:action="@{/admin/services/save}" th:object="${dto}" method="post">
+                <input type="hidden" name="id" th:value="${id}"/>
+
+                <div class="form-group">
+                    <label class="form-label">Название *</label>
+                    <input type="text" th:field="*{name}" class="form-control"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                         th:errors="*{name}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Цена *</label>
+                    <input type="number" step="0.01" th:field="*{price}" class="form-control"
+                           th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('price')}"
+                         th:errors="*{price}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Категория</label>
+                    <input type="text" th:field="*{category}" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Мои заявки')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <div class="d-flex justify-between align-center mb-4">
+        <h1>📦 Мои заявки</h1>
+        <a th:href="@{/requests/new}" class="btn btn-primary">+ Создать заявку</a>
+    </div>
+
+    <div th:if="${orders.isEmpty()}" class="alert alert-info">
+        У вас пока нет заявок. <a th:href="@{/requests/new}">Создайте первую</a>.
+    </div>
+
+    <div class="card" th:unless="${orders.isEmpty()}">
+        <table class="table mb-0">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Трек-номер</th>
+                <th>Ячейка</th>
+                <th>Дата выдачи</th>
+                <th>Статус</th>
+                <th>Комментарий</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="o : ${orders}">
+                <td th:text="${o.id}"></td>
+                <td th:text="${o.parcel.trackingNumber}"></td>
+                <td th:text="${o.cell != null ? o.cell.cellNumber : '—'}"></td>
+                <td th:text="${o.issueDate != null ? o.issueDate : '—'}"></td>
+                <td>
+                    <span class="badge"
+                          th:classappend="'badge-' + ${#strings.toLowerCase(o.status)}"
+                          th:text="${o.status}"></span>
+                </td>
+                <td th:text="${o.comment != null ? o.comment : '—'}"></td>
+                <td>
+                    <form th:if="${o.status.name() == 'NEW'}"
+                          th:action="@{'/requests/' + ${o.id} + '/cancel'}"
+                          method="post"
+                          style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Отменить заявку?');">
+                            Отменить
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

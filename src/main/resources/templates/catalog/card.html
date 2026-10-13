@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/header :: head('Услуга')}"></head>
 <body>
 
@@ -9,7 +10,7 @@
 <div class="container">
     <a th:href="@{/catalog}" class="text-muted">← Назад в каталог</a>
 
-    <div class="card mt-3">
+    <div class="card mt-3" style="max-width:640px;margin:16px auto 0;">
         <div class="card-body">
             <h1 th:text="${service.name}"></h1>
             <p class="text-muted mb-3">
@@ -20,9 +21,31 @@
             </p>
 
             <hr>
-            <p class="mb-0">
-                Чтобы заказать эту услугу, войдите в личный кабинет и создайте заявку.
-            </p>
+
+            <!-- Для ГОСТЯ -->
+            <div sec:authorize="isAnonymous()">
+                <p class="mb-3">
+                    Чтобы заказать эту услугу, войдите в личный кабинет и создайте заявку.
+                </p>
+                <a th:href="@{/login}" class="btn btn-primary">Войти</a>
+                <a th:href="@{/register}" class="btn btn-secondary">Регистрация</a>
+            </div>
+
+            <!-- Для USER и ADMIN -->
+            <div sec:authorize="hasAnyRole('USER','ADMIN')">
+                <p class="mb-3">
+                    Вы можете оформить заявку на эту услугу в личном кабинете.
+                </p>
+                <a th:href="@{/requests/new}" class="btn btn-primary">📦 Создать заявку</a>
+                <a th:href="@{/requests}" class="btn btn-secondary">Мои заявки</a>
+            </div>
+
+            <!-- Только для ADMIN — быстрая ссылка на редактирование -->
+            <div sec:authorize="hasRole('ADMIN')" style="margin-top:12px;">
+                <hr>
+                <a th:href="@{'/admin/services/' + ${service.id} + '/edit'}"
+                   class="btn btn-danger btn-sm">✏️ Редактировать услугу</a>
+            </div>
         </div>
     </div>
 </div>

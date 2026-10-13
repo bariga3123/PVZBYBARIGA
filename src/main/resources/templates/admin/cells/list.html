@@ -1,0 +1,39 @@
+<!-- admin/cells/list.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Ячейки')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+<div class="container">
+    <a th:href="@{/admin/dashboard}" class="text-muted">← В админку</a>
+    <div class="d-flex justify-between align-center mt-3 mb-4">
+        <h1>🗄️ Ячейки</h1>
+        <a th:href="@{/admin/cells/new}" class="btn btn-primary">+ Добавить</a>
+    </div>
+    <div class="card">
+        <table class="table mb-0">
+            <thead><tr><th>#</th><th>Номер</th><th>Размер</th><th>Занята</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="c : ${items}">
+                <td th:text="${c.id}"></td>
+                <td th:text="${c.cellNumber}"></td>
+                <td th:text="${c.size}"></td>
+                <td th:text="${c.isOccupied} ? 'Да' : 'Нет'"></td>
+                <td>
+                    <a th:href="@{'/admin/cells/' + ${c.id} + '/edit'}"
+                       class="btn btn-primary btn-sm">✏️</a>
+                    <form th:action="@{'/admin/cells/' + ${c.id} + '/delete'}"
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Удалить ячейку?');">🗑</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

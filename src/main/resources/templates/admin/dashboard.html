@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Админка')}"></head>
+<body>
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<div class="container">
+    <h1 class="mb-4">🛠️ Панель администратора</h1>
+
+    <!-- Карточки статистики -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;">
+        <div class="card"><div class="card-body">
+            <div class="text-muted">Всего заявок</div>
+            <div style="font-size:32px;font-weight:700;" th:text="${totalOrders}"></div>
+        </div></div>
+        <div class="card"><div class="card-body">
+            <div class="text-muted">Новые</div>
+            <div style="font-size:32px;font-weight:700;color:#0d6efd;" th:text="${newOrders}"></div>
+        </div></div>
+        <div class="card"><div class="card-body">
+            <div class="text-muted">В работе</div>
+            <div style="font-size:32px;font-weight:700;color:#ffc107;" th:text="${inProgress}"></div>
+        </div></div>
+        <div class="card"><div class="card-body">
+            <div class="text-muted">Завершено</div>
+            <div style="font-size:32px;font-weight:700;color:#198754;" th:text="${completed}"></div>
+        </div></div>
+        <div class="card"><div class="card-body">
+            <div class="text-muted">Посылок</div>
+            <div style="font-size:32px;font-weight:700;" th:text="${totalParcels}"></div>
+        </div></div>
+        <div class="card"><div class="card-body">
+            <div class="text-muted">Ячеек свободно</div>
+            <div style="font-size:32px;font-weight:700;" th:text="${freeCells} + ' / ' + ${totalCells}"></div>
+        </div></div>
+        <div class="card"><div class="card-body">
+            <div class="text-muted">Услуг</div>
+            <div style="font-size:32px;font-weight:700;" th:text="${totalServices}"></div>
+        </div></div>
+        <div class="card"><div class="card-body">
+            <div class="text-muted">Пользователей</div>
+            <div style="font-size:32px;font-weight:700;" th:text="${totalUsers}"></div>
+        </div></div>
+    </div>
+
+    <!-- Быстрые ссылки -->
+    <div class="card">
+        <div class="card-body">
+            <h4 class="mb-3">Разделы управления</h4>
+            <a th:href="@{/admin/requests}" class="btn btn-primary">📋 Заявки</a>
+            <a th:href="@{/admin/parcels}"  class="btn btn-primary">📦 Посылки</a>
+            <a th:href="@{/admin/customers}" class="btn btn-primary">👥 Получатели</a>
+            <a th:href="@{/admin/cells}"    class="btn btn-primary">🗄️ Ячейки</a>
+            <a th:href="@{/admin/services}" class="btn btn-primary">💼 Услуги</a>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
